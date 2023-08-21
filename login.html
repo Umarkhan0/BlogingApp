@@ -17,25 +17,29 @@
                <div class="flip-card__inner">
                   <div class="flip-card__front">
                      <div class="title">Log in</div>
-                     <form action="" class="flip-card__form">
+                     <div class="flip-card__form">
                         <input type="email" placeholder="Email" name="email" class="flip-card__input">
                         <input type="password" placeholder="Password" name="password" class="flip-card__input">
                         <button class="flip-card__btn">Let`s go!</button>
-                     </form>
+                     </div>
                   </div>
                   <div class="flip-card__back">
                      <div class="title">Sign up</div>
-                     <form action="" class="flip-card__form">
-                        <input type="name" placeholder="Name" class="flip-card__input">
-                        <input type="email" placeholder="Email" name="email" class="flip-card__input">
-                        <input type="password" placeholder="Password" name="password" class="flip-card__input">
-                        <button class="flip-card__btn">Confirm!</button>
-                     </form>
+                     <div class="flip-card__form">
+                        <div>
+                        <input type="name" placeholder="Name" class="flip-card__input" id="name-input">
+                        <span class="error-charactors">Atlest 4 characters</span>
+                        </div>
+                        <input type="email" placeholder="Email" name="email" class="flip-card__input email-input">
+                        <input type="password" placeholder="Password" name="password" class="flip-card__input password input">
+                        <button class="flip-card__btn" id="sign-up">Confirm!</button>
+                    </div>
                   </div>
                </div>
             </label>
         </div>   
    </div>
     </div>
+    <script type="module" src="login-signUp.js"></script>
 </body>
 </html>
