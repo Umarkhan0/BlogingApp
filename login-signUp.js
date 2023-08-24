@@ -1,56 +1,110 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.2.0/firebase-app.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.2.0/firebase-analytics.js";
-import { getAuth , createUserWithEmailAndPassword} from "https://www.gstatic.com/firebasejs/10.2.0/firebase-auth.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyBa1OJ1QQ_5ksCYNh8wxLP8Mrf_a0Ozem4",
-  authDomain: "blogweb-f23ae.firebaseapp.com",
-  projectId: "blogweb-f23ae",
-  storageBucket: "blogweb-f23ae.appspot.com",
-  messagingSenderId: "579369865350",
-  appId: "1:579369865350:web:8d3e7979e329134db80107",
-  measurementId: "G-W4F4F5B071"
-}
-
-
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-const auth = getAuth(app);
-
+import { auth, createUserWithEmailAndPassword, doc, setDoc, db /*CompleteSignUp */, signInWithEmailAndPassword, /* CheckState */ onAuthStateChanged } from './firebase.js';
 let nameInput = document.getElementById("name-input");
-let email = document.querySelector(".email-input");
-let password = document.querySelector(".password input");
+let email = document.getElementById("email-input");
+let password = document.getElementById("password-input");
 let signUpbtn = document.getElementById("sign-up");
 let errorName = document.querySelector(".error-charactors");
 signUpbtn.addEventListener("click", (e) => {
-    e.preventDefault()
+  e.preventDefault()
+  if (nameInput.value.length >= 4) {
+    signUpbtn.innerHTML = `
+   <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
+   <span class="visually-hidden" role="status">Loading...</span>
+   `;
+    nameInput.disabled = true
+    password.disabled = true
+    email.disabled = true
+    signUpbtn.disabled = true
+    nameInput.style.border = "none";
+    errorName.style.display = "none"
+    createUserWithEmailAndPassword(auth, email.value, password.value)
+      .then(async (userCredential) => {
+        const user = userCredential.user;
+        console.log(user.uid)
+        await setDoc(doc(db, "users", user.uid), {
+          name: nameInput.value,
+          email: email.value
+        });
+        nameInput.disabled = false
+        password.disabled = false
+        email.disabled = false
+        signUpbtn.disabled = false
+        document.querySelector(".spinner-grow").style.display = "none"
+        signUpbtn.innerHTML = `Sign up`
+        window.location.assign("index.html")
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorMessage)
+        swal("Oops", errorMessage, "error")
+        nameInput.disabled = false
+        password.disabled = false
+        email.disabled = false
+        signUpbtn.disabled = false
+        document.querySelector(".spinner-grow").style.display = "none"
+        signUpbtn.innerHTML = `Sign up`
+      });
+  } else {
+    nameInput.style.border = "2px solid red";
+    errorName.style.display = "block"
+  };
+});
 
 
-    createUserWithEmailAndPassword(auth, email, password)
+                                                        /*CompleteSignUp */
+
+let loginBtn = document.querySelector(".login-btn");
+const signIn = () => {
+  let loginInputEmail = document.querySelector(".login-input-email");
+  let loginInputPassword = document.querySelector(".login-input-password");
+  loginBtn.innerHTML = `
+<span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
+<span class="visually-hidden" role="status">Loading...</span>
+`;
+  loginInputEmail.disabled = true
+  loginInputPassword.disabled = true
+  loginBtn.disabled = true
+  signInWithEmailAndPassword(auth, loginInputEmail.value, loginInputPassword.value)
     .then((userCredential) => {
-      // Signed in 
       const user = userCredential.user;
-      // ...
+      loginInputEmail.disabled = false
+      loginInputPassword.disabled = false
+      loginBtn.disabled = false
+      let spinner = document.querySelector(".spinner-grow")
+      spinner.style.display = "none"
+      loginBtn.innerHTML = `
+      LOG IN`
+      console.log("sing in")
+      window.location.assign("index.html")
     })
     .catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
-      // ..
+      swal("Oops", errorMessage, "error")
+      loginInputEmail.disabled = false
+      loginInputPassword.disabled = false
+      loginBtn.disabled = false
+      let spinner = document.querySelector(".spinner-grow")
+      spinner.style.display = "none"
+      loginBtn.innerHTML = `
+      LOG IN
+      `
     });
-
-    console.log(nameInput.value.length)
-    // if (nameInput.value.length < "4") {
-    //     nameInput.style.border = "2px solid red";
-    //     errorName.style.display = "block";
-    // }
-    // else {
-    //     nameInput.style.border = "none";
-    //     errorName.style.display = "none"
-       
-        
+};
+loginBtn.addEventListener('click', signIn);
+                                                          /* Complete SignIn */
 
 
-
-
-    // }
-})
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    const uid = user.uid;
+    if (window.location.href !== './index.html') {
+      window.location.assign('./index.html')
+    }
+    // ...
+  } else {
+    // User is signed out
+    // ...
+  }
+});
