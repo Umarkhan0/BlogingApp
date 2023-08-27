@@ -23,7 +23,8 @@ signUpbtn.addEventListener("click", (e) => {
         console.log(user.uid)
         await setDoc(doc(db, "users", user.uid), {
           name: nameInput.value,
-          email: email.value
+          email: email.value,
+          images: 'https://tse1.mm.bing.net/th?id=OIP.tvaMwK3QuFxhTYg4PSNNVAHaHa&pid=Api&rs=1&c=1&qlt=95&w=107&h=107'
         });
         nameInput.disabled = false
         password.disabled = false
@@ -100,7 +101,7 @@ onAuthStateChanged(auth, (user) => {
   if (user) {
     const uid = user.uid;
     if (window.location.href !== './index.html') {
-      window.location.assign('./index.html')
+      // window.location.assign('./index.html')
     }
     // ...
   } else {

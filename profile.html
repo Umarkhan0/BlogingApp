@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My profile</title>
+    <link rel="stylesheet" href="profile.css">
+    
+</head>
+
+
+
+<body class="profile-body">
+    <div class="profile-main-container">
+        <div class="contant-container">
+            <div class="picture-main">
+                <div class="picture">
+                    <img class="pro-img"
+                        src="https://tse1.mm.bing.net/th?id=OIP.tvaMwK3QuFxhTYg4PSNNVAHaHa&pid=Api&rs=1&c=1&qlt=95&w=107&h=107"
+                        alt="profile">
+                </div>
+                <input type="file" name="fileInput" id="fileInput" class="image-get">
+                <label for="fileInput" id="customButton">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-camera-fill" viewBox="0 0 16 16">
+                        <path d="M10.5 8.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"></path>
+                        <path
+                            d="M2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4H2zm.5 2a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1zm9 2.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0z">
+                        </path>
+
+                    </svg>
+                    <div class="loading" id="loading">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </label>
+            </div>
+
+
+            <div class="pro-inputs">
+                <!-- <p class="name-text">Name:</p> -->
+                
+                   <input type="text" class="flip-card__input name-input" placeholder="your name">
+                   <span class="error-name">
+                    Atleast 4 characters
+                   </span>
+                <!-- <p class="name-text">Email:</p> -->
+                <span><input type="text" class="flip-card__input email-input"></span>
+                <button class="flip-card__btn" id="update">Confirm!</button>
+
+            </div>
+            </div>
+        </div>
+        <script type="module" src="prifile.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"
+            integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</body>
+
+</html>

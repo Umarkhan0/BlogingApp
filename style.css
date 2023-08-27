@@ -1,3 +1,4 @@
+.profile-body,
 .login-signup-body,
 .home-body {
     background-color: #000;
@@ -241,9 +242,11 @@
     cursor: pointer;
 
 }
-.link-login{
+
+.link-login {
     text-decoration: none;
 }
+
 .name-btn:active {
     opacity: 0;
 }
@@ -351,13 +354,18 @@
     text-align: center;
     margin-left: 6px;
 }
-.blog-contant{
+
+.blog-contant {
     color: #fff;
     padding: 6px;
 }
-.error-charactors{
+
+.error-charactors {
     color: #ff0000;
     float: left;
     padding: 8px 0px 0px 23px;
     display: none;
 }
+
+/* PROFILE START */
+
