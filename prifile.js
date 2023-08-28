@@ -1,15 +1,12 @@
-import { auth, onAuthStateChanged, doc, db, getDoc, signOut, updateEmail, reauthenticateWithCredential, EmailAuthProvider, storage, ref, uploadBytesResumable, getDownloadURL, updateDoc } from './firebase.js';
+import { auth, onAuthStateChanged, doc, db, getDoc, updateEmail, reauthenticateWithCredential, EmailAuthProvider, storage, ref, uploadBytesResumable, getDownloadURL, updateDoc } from './firebase.js';
 let spinnerpic = document.querySelector(".loading")
 let cameraIcon = document.querySelector(".bi-camera-fill");
 let emailInput = document.querySelector(".email-input");
 let nameInput = document.querySelector(".name-input");
+let conformBtn = document.getElementById("update");
 onAuthStateChanged(auth, async (user) => {
     if (user) {
         const uid = user.uid;
-
-
-
-
         const docRef = doc(db, "users", user.uid);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
@@ -18,6 +15,8 @@ onAuthStateChanged(auth, async (user) => {
             emailInput.value = docSnap.data().email
             nameInput.value = docSnap.data().name
             let profileImg = document.querySelector("#fileInput");
+            document.querySelector(".svg-frame").style.display = "none"
+            document.querySelector(".contant-container").style.visibility = "inherit"
             profileImg && profileImg.addEventListener("change", () => {
                 console.log(profileImg.files.name = `${docSnap.data().name}.png`)
 
@@ -45,13 +44,18 @@ onAuthStateChanged(auth, async (user) => {
                             }
                         },
                         (error) => {
+
                             console.log(error)
                         },
                         () => {
                             getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
 
-                                propicture.src = URL.createObjectURL(profileImg.files[0]);
                                 console.log('File available at', downloadURL);
+                                const washingtonRef = doc(db, "users", user.uid);
+                                await updateDoc(washingtonRef, {
+                                    images: downloadURL
+                                });
+                                propicture.src = URL.createObjectURL(profileImg.files[0]);
                                 spinnerpic.style.display = "none"
                                 cameraIcon.style.display = 'block';
 
@@ -68,69 +72,101 @@ onAuthStateChanged(auth, async (user) => {
 
 
         let updateFun = async () => {
-            // const user = auth.currentUser;
-            let newEmail = document.querySelector(".email-input").value
-let emailUpdation = () => {
-if(user.email != newEmail){
-    swal({
-        content: {
-            element: "input",
-            attributes: {
-                placeholder: "Type your password",
-                type: "password",
-            },
-        },
-    }).then(async(value) => {
-       
-        if (value) {
-      
-            try {
-                const user = auth.currentUser;
-                const credential = EmailAuthProvider.credential(user.email, value);
-                await reauthenticateWithCredential(user, credential);
-                await updateEmail(user, newEmail);
+            let newEmail = document.querySelector(".email-input");
+            let emailUpdation = () => {
+                if (user.email != newEmail.value) {
+                    swal({
+                        content: {
+                            element: "input",
+                            attributes: {
+                                placeholder: "Type your password",
+                                type: "password",
+                            },
+                        },
+                    }).then(async (value) => {
+                        if (value) {
+                            try {
+                                const user = auth.currentUser;
+                                const credential = EmailAuthProvider.credential(user.email, value);
+                                conformBtn.innerHTML = `
+                                <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
+                                <span class="visually-hidden" role="status">Loading...</span>
+                                `;
+                                emailInput.disabled = true
+                                nameInput.disabled = true;
+                                conformBtn.disabled = true
 
-                const washingtonRef = doc(db, "users", user.uid)
-                await updateDoc(washingtonRef, {
-                    email: newEmail
-                });
 
-                swal({
-                    icon: "success",
-                  });
 
-            } catch (error) {
-                console.log(error)
-                swal ( "Oops" ,  "Rong password" ,  "error" ).then(() =>{
-                emailUpdation()
-                    
-                })
+                                await reauthenticateWithCredential(user, credential);
+                                await updateEmail(user, newEmail.value);
+                                const washingtonRef = doc(db, "users", user.uid);
+                                await updateDoc(washingtonRef, {
+                                    email: newEmail.value
+                                });
+                                swal({
+                                    icon: "success",
+                                });
+                                conformBtn.innerHTML = `Conform!`;
+                                newEmail.style.border = "none"
+                            } catch (error) {
+                                const errorMessage = error.message;
+                                conformBtn.innerHTML = 'Conform!';
+                                emailInput.disabled = false;
+                                nameInput.disabled = false;
+                                conformBtn.disabled = false;
+
+
+
+                                console.log(errorMessage)
+                                swal("Oops", errorMessage, "error").then(() => {
+                                    if (errorMessage == 'Firebase: Error (auth/wrong-password).') {
+                                        newEmail.style.border = "none"
+                                        emailUpdation()
+                                    } else {
+                                        newEmail.style.border = "2px solid red"
+                                    }
+                                });
+                            };
+                        } else {
+                            console.log("No input provided");
+                        }
+                    });
+
+                }
             }
-
-
-        } else {
-            // User clicked cancel or didn't provide any input
-            console.log("No input provided");
-        }
-    });
-
-        }
-    }
-    emailUpdation()
-
-            if (nameInput.value.length >= 4) {
+            emailUpdation()
+            console.log()
+            if (nameInput.value.length >= 4 && nameInput.value !== docSnap.data().name) {
+                conformBtn.innerHTML = `
+                <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
+                <span class="visually-hidden" role="status">Loading...</span>
+                `;
+                document.querySelector(".error-name").style.display = "none";
+                nameInput.style.border = 'none';
+                emailInput.disabled = true
+                nameInput.disabled = true;
+                conformBtn.disabled = true;
                 const washingtonRef = doc(db, "users", user.uid)
                 await updateDoc(washingtonRef, {
                     name: nameInput.value
                 });
-                document.querySelector(".error-name").style.display = "none";
-            } else {
+                if(docSnap.data().email == emailInput.value){
+                swal({
+                    icon: "success",
+                });
+            }
+                emailInput.disabled = false;
+                nameInput.disabled = false;
+                conformBtn.disabled = false;
+                conformBtn.innerHTML = `Conform!`
+            } if (nameInput.value.length <= 5) {
                 document.querySelector(".error-name").style.display = "block";
+                nameInput.style.border = '2px solid red';
 
             }
 
         }
-        let conformBtn = document.getElementById("update");
         conformBtn.addEventListener('click', updateFun)
 
 
