@@ -1,4 +1,11 @@
-import { auth, onAuthStateChanged, doc, db, getDoc, signOut } from './firebase.js';
+import {
+  auth,
+  onAuthStateChanged,
+  doc,
+  db,
+  getDoc,
+  signOut,
+} from "./firebase.js";
 
 let userProfileBtn = document.getElementById("user-name");
 let lofOutBtn = document.getElementById("log-out-btn");
@@ -9,33 +16,33 @@ onAuthStateChanged(auth, async (user) => {
     const docRef = doc(db, "users", user.uid);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
-      userProfileBtn.textContent = docSnap.data().name
-      lofOutBtn.innerHTML =
-        console.log(userProfileBtn);
+      userProfileBtn.textContent = docSnap.data().name;
+      lofOutBtn.innerHTML = console.log(userProfileBtn);
       lofOutBtn.innerHTML = `
         <div class="login-btn log-out-btn" id="login-btn">
                         LOG Out
                     </div>
         `;
       let logOutBtn = document.querySelector(".log-out-btn");
-      logOutBtn.addEventListener('click', () => {
-        signOut(auth).then(() => {
-          window.location.reload()
-        }).catch((error) => {
-          console.log(error);
-        });
+      logOutBtn.addEventListener("click", () => {
+        signOut(auth)
+          .then(() => {
+            window.location.reload();
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       });
     } else {
-      userProfileBtn.style.display = "none"
+      userProfileBtn.style.display = "none";
       console.log("No such document!");
-    };
-
+    }
   } else {
-    nameBtn.style.display = "none"
-    console.log("sign out")
-  };
+    nameBtn.style.display = "none";
+    console.log("sign out");
+  }
 });
 let profileBtn = () => {
-  window.location.assign("profile.html")
-}
-nameBtn.addEventListener('click', profileBtn)
+  window.location.assign("profile.html");
+};
+nameBtn.addEventListener("click", profileBtn);
