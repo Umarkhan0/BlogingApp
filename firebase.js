@@ -17,6 +17,9 @@ import {
   setDoc,
   getDoc,
   updateDoc,
+  addDoc,
+  collection,
+  getDocs
 } from "https://www.gstatic.com/firebasejs/10.2.0/firebase-firestore.js";
 import {
   getStorage,
@@ -59,4 +62,7 @@ export {
   updatePassword,
   EmailAuthProvider,
   updateEmail,
+  addDoc,
+  collection,
+  getDocs
 };

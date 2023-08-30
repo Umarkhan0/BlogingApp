@@ -367,5 +367,16 @@
     display: none;
 }
 
-/* PROFILE START */
+.title-container {
+    width: 300px;
+}
 
+.title-post {
+    color: #fff;
+    text-align: center;
+    font-size: medium;
+    font-weight: 800;
+    width: 100%;
+}
+
+/* PROFILE START */
